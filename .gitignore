@@ -1,0 +1,5 @@
+venv/
+.vscode/
+__pycache__/
+static/*.m4a
+static/*.mp3

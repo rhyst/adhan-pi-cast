@@ -1,0 +1,133 @@
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Adhan Control</title>
+    <link rel="stylesheet" href="/static/mvp.css" />
+    <style>
+      body,
+      main {
+        padding-top: 0;
+        padding-bottom: 0;
+      }
+      header {
+        padding: 1;
+      }
+      form {
+        margin-left: auto;
+        margin-right: auto;
+      }
+      button.small {
+        padding: 0.5rem 1rem;
+      }
+      input[type="range"] {
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <header><h1>Adhan Control Panel</h1></header>
+    <main>
+      <form method="POST">
+        <h2>Adhan Status</h2>
+        <p>
+          Adhans are currently {{ "on" if is_on else "off" }} and will {{ " " if
+          is_on else "not " }}play at each prayer time.
+        </p>
+        <button class="small" formaction="toggle" type="submit">
+          Turn {{ "Off" if is_on else "On" }}
+        </button>
+      </form>
+      <form method="POST">
+        <h2>Upcoming Adhans</h2>
+        {% for adhan in adhans %} {% if adhan.next %}
+        <p>
+          <strong>{{ adhan.time}} - {{ adhan.name|capitalize }}</strong> - This
+          Adhan {{ "will" if is_on else "would" }} play in
+          <span id="ticker" data-datetime="{{adhan.isodate}}"></span>
+          minutes.
+        </p>
+        {% else %}
+        <p>{{ adhan.time}} - {{ adhan.name|capitalize }}</p>
+        {% endif %} {% endfor %}
+        <h2>Play Adhan Now</h2>
+        <p>Play the selected Adhan immediately.</p>
+        <select name="adhan">
+          <option>Fajr</option>
+          <option>Zuhr</option>
+          <option>Asr</option>
+          <option>Maghrib</option>
+          <option>Isha</option>
+        </select>
+        <button {{ '' if status["found_cast"] else 'disabled' }} class="small" formaction="play" type="submit">Play</button>
+      </form>
+      <form method="POST">
+        <h2>Chromecast Status</h2>
+        {% if not status["found_cast"] %}
+        <p>Could not connect to chromecast.</p>
+        {% elif status['is_idle'] %}
+        <p>The chromecast is idle.</p>
+        {% elif status['display_name'] == 'Default Media Receiver' %}
+        <p>
+          The chromecast is currently being used by the Adhan Player.
+        </p>
+        <p>{{ status['status_text'] }}</p>
+        <button class="small" type="submit" formaction="stop">
+          Stop {{ status['display_name'] }}
+        </button>
+        {% else %}
+        <p>
+          The chromecast is currently being used by {{ status['display_name']
+          }}. Adhans will not play.
+        </p>
+        <p>{{ status['status_text'] }}</p>
+        <button class="small" type="submit" formaction="stop">
+          Stop {{ status['display_name'] }}
+        </button>
+        {% endif %}
+        {% if status["found_cast"] %}
+           <h2>Volume</h2>
+           <p class="volume-text">The Adhan volume is currently at {{ status["volume"] }}%</p>
+          <input type="range" min="1" max="100" value="{{ status["volume"] }}">
+        {% endif %}
+      </form>
+    </main>
+    <script>
+      // Update ticker
+      const diffMinutes = (dt2, dt1) => {
+        return Math.abs(
+          Math.round((dt2.getTime() - dt1.getTime()) / 1000 / 60)
+        );
+      };
+      const tickerEl = document.getElementById("ticker");
+      const tickerDate = new Date(ticker.dataset.datetime);
+      const updateTicker = () => {
+        const now = new Date();
+        if (now > tickerDate) {
+          window.location.reload(true);
+        }
+        tickerEl.innerText = diffMinutes(tickerDate, new Date());
+      };
+      updateTicker();
+      setInterval(updateTicker, 5000);
+
+      // Update volume 
+      document.querySelector('input[type="range"]').addEventListener('change', e=> {
+        const volume = e.target.value;
+        fetch("volume", {
+          method: "post",
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            volume: volume / 100,
+          })
+        })
+        .then((response) => { 
+          document.querySelector('.volume-text').innerText = `The volume is currently at ${volume}%`
+        });
+      })
+    </script>
+  </body>
+</html>

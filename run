@@ -1,0 +1,24 @@
+#!/bin/bash
+export CAST_DEVICE_NAME="My device"
+export HOST=0.0.0.0
+export PORT=5000
+export LAT=0.0
+export LON=0.0
+# export FAJR_ANGLE=18
+# export ISHA_ANGLE=18
+# export ISHA_AFTER_MAGHRIB_OFFSET=90
+# export MAGRHIB_OFFSET=4
+# export ZUHR_OFFSET=5
+export FAJR_MEDIA_URL=http://192.168.0.1:5000/static/fajr.mp3
+export ZUHR_MEDIA_URL=http://192.168.0.1:5000/static/zuhr.mp3
+export ASR_MEDIA_URL=http://192.168.0.1:5000/static/asr.mp3
+export MAGHRIB_MEDIA_URL=http://192.168.0.1:5000/static/maghrib.mp3
+export ISHA_MEDIA_URL=http://192.168.0.1:5000/static/isha.mp3
+export MEDIA_TYPE=audio/mp3
+
+if [ ! -d "venv" ]; then
+    python -m virtualenv -p python venv
+    venv/bin/pip install -r requirements.txt
+fi
+
+venv/bin/python main.py

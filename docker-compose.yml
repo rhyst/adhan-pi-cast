@@ -1,0 +1,27 @@
+version: "3"
+services:
+  adhan:
+    build: .
+    image: adhan-pi-cast
+    container_name: adhan-pi-cast
+    restart: always
+    network_mode: host
+    expose:
+      - 5000
+    environment:
+      - CAST_DEVICE_NAME="My Device"
+      - HOST=0.0.0.0
+      - PORT=5000
+      - LAT=0.0
+      - LON=0.0
+      # - FAJR_ANGLE=18
+      # - ISHA_ANGLE=18
+      # - MAGRHIB_OFFSET=0
+      # - ISHA_AFTER_MAGHRIB_OFFSET=90
+      # - ZUHR_OFFSET=5
+      - FAJR_MEDIA_URL=http://192.168.0.1:5000/static/fajr.mp3
+      - ZUHR_MEDIA_URL=http://192.168.0.1:5000/static/zuhr.mp3
+      - ASR_MEDIA_URL=http://192.168.0.1:5000/static/asr.mp3
+      - MAGHRIB_MEDIA_URL=http://192.168.0.1:5000/static/maghrib.mp3
+      - ISHA_MEDIA_URL=http://192.168.0.1:5000/static/isha.mp3
+      - MEDIA_TYPE=audio/mp3
