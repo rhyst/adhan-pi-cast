@@ -14,6 +14,7 @@ services:
       - PORT=5000
       - LAT=0.0
       - LON=0.0
+      # - IS_ON=0
       # - FAJR_ANGLE=18
       # - ISHA_ANGLE=18
       # - MAGRHIB_OFFSET=0

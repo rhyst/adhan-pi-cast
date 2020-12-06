@@ -21,10 +21,12 @@ MAGHRIB_MEDIA_URL = os.getenv(
 )
 ISHA_MEDIA_URL = os.getenv("ISHA_MEDIA_URL", "{}:{}/static/isha.mp3".format(HOST, PORT))
 
+# Run config
+IS_ON = os.getenv("IS_ON", "0")
+
 app = Flask(__name__)
 
-is_on = False
-
+is_on = IS_ON != "0"
 
 def get_title(adhan):
     return "Prayer for " + adhan.title()
@@ -71,7 +73,9 @@ def index():
 
 
 scheduling_process = None
-
+if is_on:
+    scheduling_process = Process(target=scheduling)
+    scheduling_process.start()
 
 @app.route("/toggle", methods=["POST"])
 def toggle():

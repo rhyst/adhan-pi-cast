@@ -15,6 +15,7 @@ You can set the following environment variables:
 - `CAST_DEVICE_NAME` The friendly name of the device or group to cast to.
 - `HOST` The host name for the server. If using with docker/docker-compose then this should be left as the default. Default `0.0.0.0`.
 - `PORT` The port for the server. The docker container must be run with `network-mode: host` so this is the port on the host, even in a docker container (i.e. port mapping will not work). Default `5000`.
+- `IS_ON` If `1` then the scheduled Adhans will play by default (for example if the container is restarted). If `0` then they will not. Default `0`.
 - `MEDIA_TYPE` The media content type for the prayer media. Default `audio/mp3`.
 - `LAT` Your latitude for determination of prayer times. Default `0.0`
 - `LON` Your longitude for determination of prayer times. Default `0.0`
