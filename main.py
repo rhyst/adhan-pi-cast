@@ -54,13 +54,13 @@ def play_adhan(adhan):
 
 
 def scheduling():
+    print("Scheduling on")
     next_adhan = get_next_adhan()
     schedule.every().day.at(next_adhan["datetime"].strftime("%H:%M:%S")).do(
         play_adhan, next_adhan
     )
     while 1:
         schedule.run_pending()
-        print("scheduling")
         sleep(1)
 
 
@@ -86,6 +86,7 @@ def toggle():
         scheduling_process = Process(target=scheduling)
         scheduling_process.start()
     else:
+        print("Scheduling off")
         scheduling_process.kill()
     return redirect("/")
 

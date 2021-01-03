@@ -2,7 +2,7 @@ import os
 import pychromecast
 from time import sleep
 
-VOLUME = float(os.getenv("VOLUME", "0.15"))
+VOLUME = float(os.getenv("VOLUME", "0.34"))
 MEDIA_TYPE = os.getenv("MEDIA_TYPE", "audio/mp3")
 CAST_DEVICE_NAME = os.getenv("CAST_DEVICE_NAME", "My device")
 
